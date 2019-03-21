@@ -1,9 +1,9 @@
 public class HanoiRecursiveSolution implements HanoiSolution {
 
-    public static final int INIT_N = 4;
+    private int cnt;
 
     private void moveDisk(int n, char from, char to) {
-        System.out.println("Move disk " + n + " from " + from + " to " + to);
+        System.out.println("Step " + cnt++ + " Move disk " + n + " from " + from + " to " + to);
     }
 
     /**
@@ -13,7 +13,7 @@ public class HanoiRecursiveSolution implements HanoiSolution {
      * @param i intermediate
      * @param d destination
      */
-    public void move(int n, char s, char i, char d){
+    public void move(int n, char s, char i, char d) {
         if (n == 1) {
             moveDisk(n, s, i);
             moveDisk(n, i, d);
@@ -31,17 +31,13 @@ public class HanoiRecursiveSolution implements HanoiSolution {
         if (n <= 0) {
             throw new IllegalArgumentException("n must be > 0");
         }
-        move(INIT_N, 'S', 'I', 'D');
+        cnt = 1;
+        move(n, 'S', 'I', 'D');
     }
 
     @Override
-    public void examine() {
-        
-    }
-
-    public static void main(String[] args){
-        HanoiRecursiveSolution hanoi = new HanoiRecursiveSolution();
-        hanoi.solve(INIT_N);
+    public void show() {
+        // TODO
     }
 
 }

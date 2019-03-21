@@ -1,5 +1,6 @@
 import java.lang.Integer;
 import java.util.Stack;
+import java.util.Enumeration;
 
 public class Peg {
     
@@ -30,12 +31,6 @@ public class Peg {
 
     public boolean empty() {
         return stack.empty();
-    }
-
-    public void printAll() {
-        for (Integer i : stack) {
-            System.out.println(i);
-        }
     }
 
 }

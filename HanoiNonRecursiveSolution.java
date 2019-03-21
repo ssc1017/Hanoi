@@ -1,73 +1,83 @@
-import java.util.Stack;
-import java.lang.Integer;
-
 public class HanoiNonRecursiveSolution implements HanoiSolution {
 
-    private Peg S = new Peg('S');
+    private int cnt;
 
-    private Peg I = new Peg('I');
+    private Peg S;
+
+    private Peg I;
     
-    private Peg D = new Peg('D');
-
-    public static final int INIT_N = 4;
+    private Peg D;
 
     public void moveDisk(Peg from, Peg to) {
-        System.out.println("Move disk " + from.peek() + " from " + from.getCode() + " to " + to.getCode());
+        System.out.println("Step " + cnt++ + " Move disk " + from.peek() + " from " + from.getCode() + " to " + to.getCode());
         to.push(from.pop());
     }
 
-    public void exchange(Peg stack1, Peg stack2) {
-        if (!stack1.empty() && !stack2.empty()) {
-            if (stack1.peek() > stack2.peek()) {
-                moveDisk(stack2, stack1);
+    /**
+     * compare the top of peg1 and the top of peg 2 and put the smaller one onto the top of the peg with the bigger one
+     */
+    public void exchange(Peg peg1, Peg peg2) {
+        if (!peg1.empty() && !peg2.empty()) {
+            if (peg1.peek() > peg2.peek()) {
+                moveDisk(peg2, peg1);
             } else {
-                moveDisk(stack1, stack2);
+                moveDisk(peg1, peg2);
             }
-        } else if (stack1.empty() && !stack2.empty()) {
-            moveDisk(stack2, stack1);
-        } else if (!stack1.empty() && stack2.empty()) {
-            moveDisk(stack1, stack2);
+        } else if (peg1.empty() && !peg2.empty()) {
+            moveDisk(peg2, peg1);
+        } else if (!peg1.empty() && peg2.empty()) {
+            moveDisk(peg1, peg2);
         }
     }
 
+    private void initialization(int n) {
+        cnt = 1;
+        S = new Peg('S');
+        I = new Peg('I');
+        D = new Peg('D');
+        for (int i = n; i > 0; i--) {
+            S.push(i);
+        }
+    }
+
+    /**
+     * exchange S - I I - D S - I D - I repeatedly 3 ^ n - 1 times
+     */
     @Override
     public void solve(int n) {
         if (n <= 0){
             throw new IllegalArgumentException("n must be > 0");
         }
-
-        // initialization all disks
-        for (int i = n; i > 0; i--) {
-            S.push(i);
-        }
-
-        for (int i = 0; i < Math.pow(3, n) - 1;) { //循环3^n - 1
+        initialization(n);
+        // total steps 3 ^ n - 1
+        double total = Math.pow(3, n) - 1;
+        for (int i = 0; ;) {
             exchange(S, I);
-            i++;
-            if (i >= Math.pow(3, n)) break;
+            if (i++ >= total) break;
             exchange(I, D);
-            i++;
-            if (i >= Math.pow(3, n)) break;
+            if (i++ >= total) break;
             exchange(S, I);
-            i++;
-            if (i >= Math.pow(3, n)) break;
+            if (i++ >= total) break;
             exchange(D, I);
-            i++;
-            if (i >= Math.pow(3, n)) break;
+            if (i++ >= total) break;
         }
     }
 
     @Override
-    public void examine() {
-        D.printAll();
+    public void show() {
+        System.out.println("\nThe result is:");
+        while (!S.empty() || !I.empty() || !D.empty()) {
+            if (!S.empty()) {
+                System.out.print(S.pop());
+            } else System.out.print("\t");
+            if (!I.empty()) {
+                System.out.print(I.pop());
+            } else System.out.print("\t");
+            if (!D.empty()) {
+                System.out.print(D.pop() + "\n");
+            } else System.out.print("\n");
+        }
+        System.out.println(S.getCode() + "\t" + I.getCode() + "\t" + D.getCode());
     }
 
-    /**
-     * keep exchanging S - I I - D S - I D - I until complete 
-     */
-    public static void main(String[] args) {
-        HanoiNonRecursiveSolution hanoi = new HanoiNonRecursiveSolution();
-        hanoi.solve(INIT_N);
-        hanoi.examine();
-    }
 }
