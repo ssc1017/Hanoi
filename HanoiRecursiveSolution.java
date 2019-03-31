@@ -2,8 +2,25 @@ public class HanoiRecursiveSolution implements HanoiSolution {
 
     private int cnt;
 
-    private void moveDisk(int n, char from, char to) {
-        System.out.println("Step " + cnt++ + " Move disk " + n + " from " + from + " to " + to);
+    private Peg S;
+
+    private Peg I;
+    
+    private Peg D;
+
+    private void initialization(int n) {
+        cnt = 1;
+        S = new Peg('S');
+        I = new Peg('I');
+        D = new Peg('D');
+        for (int i = n; i > 0; i--) {
+            S.push(i);
+        }
+    }
+
+    private void moveDisk(int n, Peg from, Peg to) {
+        System.out.println("Step " + cnt++ + " Move disk " + from.peek() + " from " + from.getCode() + " to " + to.getCode());
+        to.push(from.pop());
     }
 
     /**
@@ -13,7 +30,7 @@ public class HanoiRecursiveSolution implements HanoiSolution {
      * @param i intermediate
      * @param d destination
      */
-    public void move(int n, char s, char i, char d) {
+    private void move(int n, Peg s, Peg i, Peg d) {
         if (n == 1) {
             moveDisk(n, s, i);
             moveDisk(n, i, d);
@@ -31,13 +48,25 @@ public class HanoiRecursiveSolution implements HanoiSolution {
         if (n <= 0) {
             throw new IllegalArgumentException("n must be > 0");
         }
-        cnt = 1;
-        move(n, 'S', 'I', 'D');
+        initialization(n);
+        move(n, S, I, D);
     }
 
     @Override
     public void show() {
-        // TODO
+        System.out.println("\nThe result is:");
+        while (!S.empty() || !I.empty() || !D.empty()) {
+            if (!S.empty()) {
+                System.out.print(S.pop());
+            } else System.out.print("\t");
+            if (!I.empty()) {
+                System.out.print(I.pop());
+            } else System.out.print("\t");
+            if (!D.empty()) {
+                System.out.print(D.pop() + "\n");
+            } else System.out.print("\n");
+        }
+        System.out.println(S.getCode() + "\t" + I.getCode() + "\t" + D.getCode());
     }
 
 }

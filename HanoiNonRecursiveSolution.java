@@ -8,7 +8,17 @@ public class HanoiNonRecursiveSolution implements HanoiSolution {
     
     private Peg D;
 
-    public void moveDisk(Peg from, Peg to) {
+    private void initialization(int n) {
+        cnt = 1;
+        S = new Peg('S');
+        I = new Peg('I');
+        D = new Peg('D');
+        for (int i = n; i > 0; i--) {
+            S.push(i);
+        }
+    }
+
+    private void moveDisk(Peg from, Peg to) {
         System.out.println("Step " + cnt++ + " Move disk " + from.peek() + " from " + from.getCode() + " to " + to.getCode());
         to.push(from.pop());
     }
@@ -16,7 +26,7 @@ public class HanoiNonRecursiveSolution implements HanoiSolution {
     /**
      * compare the top of peg1 and the top of peg 2 and put the smaller one onto the top of the peg with the bigger one
      */
-    public void exchange(Peg peg1, Peg peg2) {
+    private void exchange(Peg peg1, Peg peg2) {
         if (!peg1.empty() && !peg2.empty()) {
             if (peg1.peek() > peg2.peek()) {
                 moveDisk(peg2, peg1);
@@ -27,16 +37,6 @@ public class HanoiNonRecursiveSolution implements HanoiSolution {
             moveDisk(peg2, peg1);
         } else if (!peg1.empty() && peg2.empty()) {
             moveDisk(peg1, peg2);
-        }
-    }
-
-    private void initialization(int n) {
-        cnt = 1;
-        S = new Peg('S');
-        I = new Peg('I');
-        D = new Peg('D');
-        for (int i = n; i > 0; i--) {
-            S.push(i);
         }
     }
 
@@ -51,7 +51,7 @@ public class HanoiNonRecursiveSolution implements HanoiSolution {
         initialization(n);
         // total steps 3 ^ n - 1
         double total = Math.pow(3, n) - 1;
-        for (int i = 0; ;) {
+        for (int i = 0;;) {
             exchange(S, I);
             if (i++ >= total) break;
             exchange(I, D);
